@@ -1,18 +1,38 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Circuits
 {
-	public class Relay : CircuitNode
+	public class Relay : SingleDependancyNode
 	{
 		[SerializeField]
-		private CircuitNode node;
+		private float delay = 0f;
 
-		protected override bool EvalState()
+		public bool HasNode()
 		{
-			if (node != null)
-				return node.Activated;
-			else
-				return Activated;
+			return node != null;
+		}
+
+		protected override bool EvaluateState()
+		{
+			if (node != null && node.IsPowered() != IsPowered())
+			{
+				if (delay <= 0f)
+				{
+					return inverted ? !node.IsPowered() : node.IsPowered();
+				}
+				else
+				{
+					StartCoroutine(DelayedPowerChange(node.IsPowered()));
+				}
+			}
+			return IsPowered();
+		}
+
+		private IEnumerator DelayedPowerChange(bool value)
+		{
+			yield return new WaitForSeconds(delay);
+			SetPowered(value);
 		}
 	}
 }
