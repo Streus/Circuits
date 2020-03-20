@@ -1,27 +1,25 @@
-﻿using UnityEngine;
-
-namespace Circuits
+﻿namespace Circuits
 {
-	public class XorGate : MultiDependancyNode
-	{
-		protected override bool EvaluateState()
-		{
-			if (nodes == null)
-				return inverted ? false : true;
+    public class XorGate : MultiDependancyNode
+    {
+        protected override bool EvaluateState()
+        {
+            if (nodes == null)
+                return true;
 
-			bool found = false;
-			for (int i = 0; i < nodes.Length; i++)
-			{
-				if (nodes[i] != null && nodes[i].IsPowered())
-				{
-					if(found)
-					{
-						return inverted ? true : false;
-					}
-					found = true;
-				}
-			}
-			return inverted ? !found : found;
-		}
-	}
+            bool found = false;
+            foreach (CircuitNode node in nodes)
+            {
+                if (node?.Powered ?? false)
+                {
+                    if (found)
+                    {
+                        return false;
+                    }
+                    found = true;
+                }
+            }
+            return found;
+        }
+    }
 }

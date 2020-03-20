@@ -1,47 +1,46 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 
 namespace Circuits
 {
-	[ExecuteInEditMode, DisallowMultipleComponent]
-	public abstract class CircuitNode : MonoBehaviour
-	{
-		[SerializeField, HideInInspector]
-		private bool powered = true;
+    [ExecuteInEditMode, DisallowMultipleComponent]
+    public abstract class CircuitNode : MonoBehaviour
+    {
+        [SerializeField, HideInInspector]
+        private bool powered = true;
 
-		[SerializeField]
-		protected bool inverted = false;
+        [SerializeField]
+        private bool inverted = false;
 
-		private bool nextActivatedValue;
+        private bool nextPowered;
 
-		public virtual bool IsPowered()
-		{
-			return powered;
-		}
+        public bool Powered
+        {
+            get => inverted ^ powered;
+            set => nextPowered = inverted ^ value;
+        }
 
-		public virtual void SetPowered(bool value)
-		{
-			nextActivatedValue = value;
-		}
+        public bool PoweredActual => powered;
 
-		protected abstract bool EvaluateState();
+        public bool Inverted => inverted;
 
-		private void FixedUpdate()
-		{
-			nextActivatedValue = EvaluateState();
-		}
+        protected abstract bool EvaluateState();
 
-		private void LateUpdate()
-		{
-			powered = nextActivatedValue;
-		}
+        private void FixedUpdate()
+        {
+            nextPowered = EvaluateState();
+        }
+
+        private void LateUpdate()
+        {
+            powered = nextPowered;
+        }
 
 #if UNITY_EDITOR
-		protected virtual void OnDrawGizmos()
-		{
-			Gizmos.color = IsPowered() ? Color.green : Color.gray;
-			Gizmos.DrawWireSphere(transform.position, 0.9f);
-		}
+        protected virtual void OnDrawGizmos()
+        {
+            Gizmos.color = Powered ? Color.green : Color.gray;
+            Gizmos.DrawWireSphere(transform.position, 1f);
+        }
 #endif
-	}
+    }
 }

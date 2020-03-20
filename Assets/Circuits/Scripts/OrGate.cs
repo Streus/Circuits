@@ -1,22 +1,20 @@
-﻿using UnityEngine;
-
-namespace Circuits
+﻿namespace Circuits
 {
-	public class OrGate : MultiDependancyNode
-	{
-		protected override bool EvaluateState()
-		{
-			if (nodes == null)
-				return inverted ? false : true;
+    public class OrGate : MultiDependancyNode
+    {
+        protected override bool EvaluateState()
+        {
+            if (nodes == null)
+                return true;
 
-			for(int i = 0; i < nodes.Length; i++)
-			{
-				if(nodes[i] != null && nodes[i].IsPowered())
-				{
-					return inverted ? false : true;
-				}
-			}
-			return inverted ? true : false;
-		}
-	}
+            foreach (CircuitNode node in nodes)
+            {
+                if (node?.Powered ?? false)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }
