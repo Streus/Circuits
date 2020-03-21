@@ -1,5 +1,8 @@
-﻿namespace Circuits
+﻿using UnityEngine;
+
+namespace Circuits
 {
+    [AddComponentMenu("Circuits/Or Gate")]
     public class OrGate : MultiDependancyNode
     {
         protected override bool EvaluateState()

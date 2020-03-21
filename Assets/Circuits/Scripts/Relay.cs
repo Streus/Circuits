@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Circuits
 {
+    [AddComponentMenu("Circuits/Relay")]
     public class Relay : SingleDependancyNode
     {
         [SerializeField]

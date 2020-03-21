@@ -2,6 +2,7 @@
 
 namespace Circuits
 {
+    [AddComponentMenu("Circuits/Clock")]
     public class Clock : CircuitNode
     {
         [SerializeField]

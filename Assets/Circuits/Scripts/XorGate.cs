@@ -1,5 +1,8 @@
-﻿namespace Circuits
+﻿using UnityEngine;
+
+namespace Circuits
 {
+    [AddComponentMenu("Circuits/Xor Gate")]
     public class XorGate : MultiDependancyNode
     {
         protected override bool EvaluateState()

@@ -2,25 +2,26 @@
 
 namespace Circuits
 {
-    [ExecuteInEditMode, DisallowMultipleComponent]
+    [DisallowMultipleComponent]
     public abstract class CircuitNode : MonoBehaviour
     {
-        [SerializeField, HideInInspector]
+        public delegate void StateCallback(bool state);
+
+        [SerializeField, ReadOnlyInPlayMode]
         private bool powered = true;
 
         [SerializeField]
         private bool inverted = false;
 
         private bool nextPowered;
+        public event StateCallback onPoweredChange;
 
         public bool Powered
         {
             get => inverted ^ powered;
-            set => nextPowered = inverted ^ value;
+            set => nextPowered = value;
         }
-
         public bool PoweredActual => powered;
-
         public bool Inverted => inverted;
 
         protected abstract bool EvaluateState();
@@ -32,7 +33,11 @@ namespace Circuits
 
         private void LateUpdate()
         {
-            powered = nextPowered;
+            if (powered != nextPowered)
+            {
+                powered = nextPowered;
+                onPoweredChange?.Invoke(Powered);
+            }
         }
 
 #if UNITY_EDITOR
